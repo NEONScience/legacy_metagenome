@@ -51,16 +51,29 @@ An example for a single sample:
 SAMPLE='BMI_HWTY2BGX7_18S_12_1111'
 
 repair.sh \
-  in1=BMI_${SEQRUN}_mms_R1/${SAMPLE}_R1.fastq.gz \
-  in2=BMI_${SEQRUN}_mms_R2/${SAMPLE}_R2.fastq.gz \
-  out1=BMI_${SEQRUN}_srt_R1/${SAMPLE}_srt_R1.fastq.gz \
-  out2=BMI_${SEQRUN}_srt_R2/${SAMPLE}_srt_R2.fastq.gz \
+  in1=${SAMPLE}_R1.fastq.gz \
+  in2=${SAMPLE}_R2.fastq.gz \
+  out1=${SAMPLE}_srt_R1.fastq.gz \
+  out2=${SAMPLE}_srt_R2.fastq.gz \
   repair=t \
   tossbrokenreads=t \
-  -Xmx16g \
+  -Xmx20g \
   2> logs/${SAMPLE}_repair.log
 
-
 ```
+
+Where: 
+`in1` is the forward (R1) sequence file
+`in2` is the reverse (R2) sequence file
+`out1` is the output sorted R1 sequence file
+`out2` is the output sorted R2 sequence file
+
+the `repair=t` argument will repair out of sync reads between the files
+the `tossbrokenreads=t` argument will throw out any excess reads found in one file but not the other (this will help if one of the files is truncated)
+As bbmap is a Java-based tool, the `-Xmx20g` tells the program how much RAM to use. In this case 20 GB of RAM were used. I found that for most of the NEON legacy files, this was sufficient. 
+
+Finally, the `2> logs/${SAMPLE}_repair.log` part of the command will send the text summary output to a file for later reference. This is optional. 
+
+
 
 
