@@ -4,7 +4,7 @@ a repository to update and track issues for NEON legacy metagenome data
 
 ## ISSUE: Incorrect formatting in legacy metagenomic sequencing files 
 
-It was discovered recently that many older NEON metagenomic samples that were sequenced in 2018 – 2019 were not formatted correctly. This issue affects many samples collected from 2014-2018. The fastq files from these sequencing runs are not in error, but the reads in the paired end files are in a different order to each other. Here is the table that lists all samples that may be affected. When evaluating the legacy files, if a sequencing run showed at least some samples that were out of order, then we went ahead and reformatted all the samples in that run. 
+It was discovered recently that many older NEON metagenomic samples that were sequenced in 2018 – 2019 were not formatted correctly. This issue affects many samples collected from 2014-2018. The fastq files from these sequencing runs are not in error, but the reads in the paired end files are in a different order to each other. [Here is the table](https://github.com/NEONScience/legacy_metagenome/blob/main/docs/neon_samples_potentially_mispaired.tsv) that lists all samples that may be affected. When evaluating the legacy files, if a sequencing run showed at least some samples that were out of order, then we went ahead and reformatted all the samples in that run. 
 
 Below are more details as well as suggested instructions for repairing the fastq files. These processes require a fair bit of RAM, so best to run them on a server or other HPC. The repaired files will be available with the NEON 2025 release. We can provide links to the repaired files upon request. 
 
