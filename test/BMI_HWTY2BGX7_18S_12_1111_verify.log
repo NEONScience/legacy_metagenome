@@ -1,0 +1,13 @@
+java -ea -Xmx300m -Xms300m -cp /bbmap/current/ jgi.ReformatReads in1=BMI_HWTY2BGX7_srt_R1/BMI_HWTY2BGX7_18S_12_1111_srt_R1.fastq.gz in2=BMI_HWTY2BGX7_srt_R2/BMI_HWTY2BGX7_18S_12_1111_srt_R2.fastq.gz verifypaired=t out=verify_HWTY2BGX7/BMI_HWTY2BGX7_18S_12_1111_sorted.fastq.gz
+Executing jgi.ReformatReads [in1=BMI_HWTY2BGX7_srt_R1/BMI_HWTY2BGX7_18S_12_1111_srt_R1.fastq.gz, in2=BMI_HWTY2BGX7_srt_R2/BMI_HWTY2BGX7_18S_12_1111_srt_R2.fastq.gz, verifypaired=t, out=verify_HWTY2BGX7/BMI_HWTY2BGX7_18S_12_1111_sorted.fastq.gz]
+
+Set INTERLEAVED to false
+Input is being processed as paired
+Writing interleaved.
+Input:                  	2848468 reads          	414439335 bases
+Output:                 	2848468 reads (100.00%) 	414439335 bases (100.00%)
+
+Time:                         	8.228 seconds.
+Reads Processed:       2848k 	346.18k reads/sec
+Bases Processed:        414m 	50.37m bases/sec
+Names appear to be correctly paired.
