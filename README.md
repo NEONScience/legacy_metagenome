@@ -4,15 +4,37 @@ a repository to update and track issues for NEON legacy metagenome data
 
 ## ISSUE: Incorrect formatting in legacy metagenomic sequencing files 
 
-It was discovered recently that many older NEON metagenomic samples that were sequenced in 2018 – 2019 were not formatted correctly. This issue affects many samples collected from 2014-2018. The fastq files from these sequencing runs are not in error, but the reads in the paired end files are in a different order to each other. [Here is the table](https://github.com/NEONScience/legacy_metagenome/blob/main/docs/neon_samples_potentially_mispaired.tsv) that lists all samples that may be affected. When evaluating the legacy files, if a sequencing run showed at least some samples that were out of order, then we went ahead and reformatted all the samples in that run. 
+It was discovered recently that many older NEON metagenomic samples that were sequenced in 2018 – 2019 were not formatted correctly. This issue affects many samples collected from 2014-2018. The fastq files from these sequencing runs are not in error, but the reads in the paired end files are in a different order to each other. The variable formatting prevents automated bioinformatics workflows from interleaving paired reads. The effect of this issue on other analyses, such as assembly, is not known. As we gather more information we will post it here. 
 
-Below are more details as well as suggested instructions for repairing the fastq files. These processes require a fair bit of RAM, so best to run them on a server or other HPC. The repaired files will be available with the NEON 2025 release. We can provide links to the repaired files upon request. 
+[Here is the table](https://github.com/NEONScience/legacy_metagenome/blob/main/docs/neon_samples_potentially_mispaired.tsv) that lists all samples that may be affected. When evaluating the legacy files, if a sequencing run showed at least some samples that were out of order, then we went ahead and reformatted all the samples in that run. 
+
+Below are more details as well as suggested instructions for repairing the fastq files. These processes require a fair bit of RAM, so best to run them on a server or other HPC. The repaired files will be available with the NEON 2025 release. We can provide links to the repaired files upon request. Note that the following instructions assume that the user has some experience with the command line and using basic bash tools (e.g. `head`, `grep`, `cut`). You should also have installed [**BBMap**](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/bbmap-guide/). If you need any help, please [contact us](https://www.neonscience.org/about/contact-us) or create a new issue on this repository. 
 
 ### Detecting the issue 
 
 During the affected time period the laboratory sequenced all samples in a sequencing run across all four lanes of the Illumina NextSeq machine, which resulted in four files for each sample for each strand (R1/R2). These files were then concatenated into a single file for each strand for release. For a period of time these files were concatenated in essentially a random order, so the R1 was often concatenated in a different order than the R2. Therefore, the sequence files are not in order in and of themselves, only out of sync (order) with its corresponding pair. The repair will sort both files the same way for all affected samples. 
 
-The following code illustrates how to detect the order of the four lines for a NEON sample. It takes just the first four parts of a fastq header, which describe: 
+The following code illustrates how to detect the order of the four lanes in a legacy NEON sample. It takes just the first four parts of a fastq header, which give the instrument ID, run number, flowcell ID, and lane number of the sequence (colon delimited): 
+
+```
+@<instrument>:<run number>:<flowcell ID>:<lane>
+```
+
+An example sequence header:
+
+`@NB551228:47:HWTY2BGX7:1` in which:
+
+`@` = all sequence identifiers start with @
+
+`NB551228` = instrument ID
+
+`47` = instrument run number
+
+`HWTY2BGX7` = flow cell ID
+
+`1` = lane number
+
+For a complete description of fastq files and headers, [see this link](https://help.basespace.illumina.com/files-used-by-basespace/fastq-files).
 
 
 
@@ -39,7 +61,7 @@ zgrep "${headCode}" ${i}_R2.fastq.gz | cut -f 1-4 -d ':' | uniq
 In the above example, you can see that the R1 file has the lanes in order of 1,3,2,4; while the R2 file has them in the order of 3,1,2,4. These two pairs would not interleave. 
 
 
-### Repairing affected files 
+## Repairing affected files 
 
 The [bbmap](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/bbmap-guide/) bioinformatics toolkit was used to repair and verify the fastq files. 
 
@@ -90,6 +112,7 @@ There are other bbmap tools that can do the same job. The tool `sortbyname.sh` c
 
 Note that the `-Xmx20g` argument is optional, but it is a good idea to make explicit how much memory is available. 
 
+### Creating interleaved fastq files
 
 If you would like to create a single interleaved file from the separate R1 and R2 files for your downstream work, the bbmap tool `reformat.sh` can do that. NEON metagenomic fastq files are kept as separate R1/R2 files, but all files were interleaved as a verification check. 
 
